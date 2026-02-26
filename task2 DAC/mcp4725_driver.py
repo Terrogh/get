@@ -20,7 +20,7 @@ class MCP4725:
             print(f"too much voltage mf ( 0.00 - {self.dynamic_range:.2f} ) B")
             print("sets 0.00 volts ...")
             return 0
-        return int(vol / self.dynamic_range * 255)
+        return int(vol / self.dynamic_range * 4095)
 
     def set_number(self, number):
         if not isinstance(number,int):
@@ -35,7 +35,7 @@ class MCP4725:
         self.bus.write_byte_data(0x61, first_byte, second_byte)
 
         if self.verbose:
-            print(f"number: {number}, data: [0x{(self.address << 1)}, 0x{first_byte:02X}, 0x{second_byte:02X}]\n")
+            print(f"number: {number}, data: [0x{(self.address << 1):02X}, 0x{first_byte:02X}, 0x{second_byte:02X}]\n")
 
     def set_voltage(self, vol):
         num = self.vol_to_num(vol)

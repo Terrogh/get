@@ -26,7 +26,7 @@ try:
         try:
             vol = float(input("Set your voltage: "))
             num = vol_to_num(vol)
-            dec2bin(num)
+            GPIO.output(DACPins, dec2bin(num))
         
         except ValueError:
             print("Something bad happened")

@@ -11,6 +11,10 @@ class PWM_DAC:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.gpio_pin, GPIO.OUT, initial = 0)
 
+        PWM_DAC.PWM = GPIO.PWM(self.gpio_pin, self.pwm_frequency)
+        PWM_DAC.PWM.start(0.0)
+        
+
     def deinit(self):
         GPIO.output(self.gpio_pin, 0)
         GPIO.cleanup()
@@ -20,22 +24,23 @@ class PWM_DAC:
             print(f"too much voltage mf ( 0.00 - {self.dynamic_range:.2f} ) B")
             print("sets 0.00 volts ...")
             return 0
-        return int(vol / self.dynamic_range * 255)
+        return vol / self.dynamic_range * 100
 
     def set_voltage(self, vol):
         num = self.vol_to_num(vol)
-        GPIO.output(self.gpio_pin, num)
+        # print(f"num = {num:.2f}")
+        PWM_DAC.PWM.ChangeDutyCycle(num)
 
 if __name__ == "__main__":
     
     dac = PWM_DAC(12, 500, 3.290, True)
-    
+
     try:
 
         while True:
             try:
-                voltage = float(input("set voltage in volts: "))
-                dac.set_voltage(voltage)
+                vol = float(input("set voltage in volts: "))
+                dac.set_voltage(vol)
 
             except ValueError:
                 print("Not a number, try again mf")
